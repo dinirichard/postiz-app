@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useCallback, useEffect } from 'react';
 import { withProvider } from '@gitroom/frontend/components/launches/providers/high.order.provider';
 import { useIntegration } from '@gitroom/frontend/components/launches/helpers/use.integration';
 import { useFormatting } from '@gitroom/frontend/components/launches/helpers/use.formatting';
@@ -15,22 +15,44 @@ import { MediumTags } from '@gitroom/frontend/components/launches/providers/medi
 import { MediaComponent } from '@gitroom/frontend/components/media/media.component';
 import { Select } from '@gitroom/react/form/select';
 import Image from 'next/image';
+import useSWR from 'swr';
+import { DashboardUploader } from '@gitroom/frontend/components/media/youtube.uploader';
 
-const type = [
+const visibilityType = [
   { label: 'Public', value: 'public' },
   { label: 'Private', value: 'private' },
   { label: 'Unlisted', value: 'unlisted' },
 ];
 
+const kind = [
+  { label: 'Videos', value: 'youtube#videos' },
+  { label: 'Shorts', value: 'youtube#shorts' }
+]
+
 const YoutubeSettings: FC = () => {
   const { register, control } = useSettings();
+
+  const loadMedia = useCallback(async () => {
+    return (await fetch('/media')).json();
+  }, []);
+  const { data, mutate } = useSWR('get-media', loadMedia);
+
+  
+  
   return (
     <div className="flex flex-col">
       <Input label="Title" {...register('title')} />
-      <Select label="Type" {...register('type', { value: 'public' })}>
-        {type.map((t) => (
+      <Select label="privacy" {...register('privacy', { value: 'public' })}>
+        {visibilityType.map((t) => (
           <option key={t.value} value={t.value}>
             {t.label}
+          </option>
+        ))}
+      </Select>
+      <Select label="kind" {...register('kind', { value: 'youtube#videos' })}>
+        {kind.map((k) => (
+          <option key={k.value} value={k.value}>
+            {k.label}
           </option>
         ))}
       </Select>
@@ -43,6 +65,14 @@ const YoutubeSettings: FC = () => {
           label="Thumbnail"
           description="Thumbnail picture (optional)"
           {...register('thumbnail')}
+        />
+      </div>
+      <div className="mt-[20px]">
+        <DashboardUploader 
+          onUploadSuccess={mutate}
+          allowedFileTypes='video/mp4'
+          height={350}
+          width={350}
         />
       </div>
     </div>

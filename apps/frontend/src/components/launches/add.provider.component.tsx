@@ -137,6 +137,7 @@ export const AddProviderComponent: FC<{
   const fetch = useFetch();
   const modal = useModals();
   const { social, article } = props;
+  console.log(social);
   const getSocialLink = useCallback(
     (identifier: string) => async () => {
       const { url } = await (

@@ -22,7 +22,8 @@ class CloudflareStorage implements StorageEngine {
     private _uploadUrl: string,
   ) {
     this._client = new S3Client({
-      endpoint: `https://${accountID}.r2.cloudflarestorage.com`,
+      // endpoint: `https://${accountID}.r2.cloudflarestorage.com`,
+      endpoint: `${_uploadUrl}`,
       region,
       credentials: {
         accessKeyId: accessKey,

@@ -18,9 +18,17 @@ export class YoutubeSettingsDto {
   @IsDefined()
   title: string;
 
+  @IsOptional()
+  @ValidateNested()
+  description?: string;
+
   @IsIn(['public', 'private', 'unlisted'])
   @IsDefined()
-  type: string;
+  privacy: string;
+
+  @IsIn(['youtube#video', 'youtube#short'])
+  @IsDefined()
+  kind: string;
 
   @IsOptional()
   @ValidateNested()

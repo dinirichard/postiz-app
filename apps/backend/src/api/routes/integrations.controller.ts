@@ -92,6 +92,8 @@ export class IntegrationsController {
       this._integrationManager.getSocialIntegration(integration);
     const { codeVerifier, state, url } =
       await integrationProvider.generateAuthUrl(refresh);
+    console.log('State: ', state);
+    console.log('Code Verify: ', codeVerifier);
     await ioRedis.set(`login:${state}`, codeVerifier, 'EX', 300);
 
     return { url };
@@ -200,6 +202,7 @@ export class IntegrationsController {
     }
 
     const getCodeVerifier = await ioRedis.get(`login:${body.state}`);
+    console.log('Redis getCodeVerifier: ', getCodeVerifier);
     if (!getCodeVerifier) {
       throw new Error('Invalid state');
     }

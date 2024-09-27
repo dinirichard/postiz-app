@@ -13,14 +13,23 @@ services:
       - postgres-volume:/var/lib/postgresql/data
     ports:
       - 5432:5432
+    networks:
+      - gitroom-network
+      
   gitroom-redis:
     image: redis:7.2
     container_name: gitroom-redis
     restart: always
     ports:
       - 6379:6379
+    networks:
+      - gitroom-network
 
 
 volumes:
   postgres-volume:
     external: false
+
+networks:
+  gitroom-network:
+    driver: bridge

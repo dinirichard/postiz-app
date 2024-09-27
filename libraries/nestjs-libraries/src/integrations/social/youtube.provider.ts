@@ -152,6 +152,7 @@ export class YoutubeProvider extends SocialAbstract implements SocialProvider {
         part: ['id', 'snippet', 'status'],
         notifySubscribers: true,
         requestBody: {
+          kind: settings.kind,
           snippet: {
             title: settings.title,
             description: firstPost?.message,
@@ -169,7 +170,7 @@ export class YoutubeProvider extends SocialAbstract implements SocialProvider {
             //   : {}),
           },
           status: {
-            privacyStatus: settings.type,
+            privacyStatus: settings.privacy,
           },
         },
         media: {
